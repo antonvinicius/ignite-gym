@@ -6,7 +6,7 @@ import LogoSvg from '@assets/logo.svg'
 import { Input } from '@components/Input'
 import { Button } from '@components/Button'
 
-export function SignIn() {
+export function SignUp() {
   return (
     <ScrollView
       keyboardShouldPersistTaps='always'
@@ -42,8 +42,13 @@ export function SignIn() {
             mb={6}
             fontFamily={'heading'}
           >
-            Acesse sua conta
+            Crie sua conta
           </Heading>
+
+          <Input
+            placeholder='Nome'
+            autoCapitalize='words'
+          />
 
           <Input
             placeholder='E-mail'
@@ -63,17 +68,8 @@ export function SignIn() {
 
         <Center mt={24}>
 
-          <Text
-            color={'gray.100'}
-            fontSize={'sm'}
-            mb={3}
-            fontFamily={'body'}
-          >
-            Ainda não tem acesso?
-          </Text>
-
           <Button
-            title='Criar conta'
+            title='Voltar para o login'
             variant={'outline'}
           />
         </Center>
