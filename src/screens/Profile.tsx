@@ -1,6 +1,8 @@
 import { useState } from 'react'
-import { TouchableOpacity } from 'react-native'
-import { Center, ScrollView, Text, VStack, Skeleton, Heading } from 'native-base'
+import { Alert, TouchableOpacity } from 'react-native'
+import { Center, ScrollView, Text, VStack, Skeleton, Heading, useToast } from 'native-base'
+import * as ImagePicker from 'expo-image-picker'
+import * as FileSystem from 'expo-file-system';
 
 import { ScreenHeader } from '@components/ScreenHeader'
 import { UserPhoto } from '@components/UserPhoto'
@@ -11,6 +13,45 @@ const PHOTO_SIZE = 33
 
 export function Profile() {
   const [photoIsLoading, setPhotoIsLoading] = useState(false)
+  const [photo, setUserPhoto] = useState('https://github.com/antonvinicius.png')
+
+  const toast = useToast()
+
+  async function handleUserPhotoSelect() {
+    try {
+      setPhotoIsLoading(true)
+
+      const photoSelected = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+        aspect: [4, 4],
+        allowsEditing: true,
+      })
+
+      if (photoSelected.canceled) return
+
+      const uri = photoSelected.assets[0].uri
+
+      if (uri) {
+        const photoInfo = await FileSystem.getInfoAsync(uri)
+
+        if (photoInfo.exists && (photoInfo.size / 1024 / 1024) > 3) {
+          toast.show({
+            title: 'Essa imagem é muito grande. Escolha uma de até 3 MB.',
+            placement: 'top',
+            bg: 'red.500'
+          })
+          return
+        }
+
+        setUserPhoto(uri)
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setPhotoIsLoading(false)
+    }
+  }
 
   return (
     <VStack
@@ -22,7 +63,10 @@ export function Profile() {
       />
 
       <ScrollView
-        keyboardShouldPersistTaps
+        keyboardShouldPersistTaps={'always'}
+        _contentContainerStyle={{
+          pb: 12
+        }}
       >
 
         <Center
@@ -40,13 +84,15 @@ export function Profile() {
             />
             :
             <UserPhoto
-              source={{ 'uri': 'https://github.com/antonvinicius.png' }}
+              source={{ 'uri': photo }}
               alt={'Foto de perfil'}
               size={PHOTO_SIZE}
             />
           }
 
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleUserPhotoSelect}
+          >
 
             <Text
               marginBottom={8}
@@ -71,7 +117,7 @@ export function Profile() {
           />
         </Center>
 
-        <VStack
+        <Center
           px={10}
           mt={12}
           mb={9}
@@ -81,6 +127,7 @@ export function Profile() {
             color={'gray.200'}
             fontSize={'md'}
             mb={2}
+            alignSelf={'flex-start'}
           >
             Alterar senha
           </Heading>
@@ -107,7 +154,7 @@ export function Profile() {
             title={'Atualizar'}
             mt={4}
           />
-        </VStack>
+        </Center>
 
       </ScrollView>
     </VStack>
