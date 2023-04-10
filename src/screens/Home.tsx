@@ -55,6 +55,7 @@ export function Home() {
           <Heading
             color={'gray.200'}
             fontSize={'md'}
+            fontFamily={'heading'}
           >
             Exercícios
           </Heading>

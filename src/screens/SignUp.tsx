@@ -140,7 +140,7 @@ export function SignUp() {
           />
         </Center>
 
-        <Center mt={24}>
+        <Center mt={8}>
 
           <Button
             onPress={handleGoBack}
