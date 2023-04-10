@@ -10,7 +10,7 @@ export function Routes() {
   DefaultTheme
     .colors.background = theme.colors.gray[700]
 
-  const userAuthenticated = true
+  const userAuthenticated = false
 
   return (
     <Box
