@@ -41,6 +41,7 @@ export function AppRoutes() {
           paddingBottom: sizes[10],
           paddingTop: sizes[10],
         },
+        tabBarHideOnKeyboard: true
       }}
     >
 
